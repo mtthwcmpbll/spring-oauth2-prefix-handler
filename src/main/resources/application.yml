@@ -1,0 +1,57 @@
+ssoServiceUrl: http://localhost:8080/uaa
+
+server:
+  port: 8888
+
+#spring:
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          client1:
+#            clientId: client1
+#            clientSecret: client1
+#            access-token-uri: ${ssoServiceUrl}/oauth/token
+#            user-authorization-uri: ${ssoServiceUrl}/oauth/authorize
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          client1:
+            clientId: client1
+            clientSecret: client1
+            clientName: client1
+            provider: sso
+            scope: resource.read, resource.write
+            redirectUriTemplate: ${ssoServiceUrl}
+            clientAuthenticationMethod: basic
+            authorizationGrantType: authorization_code
+        provider:
+          sso:
+            authorizationUri: ${ssoServiceUrl}/oauth/authorize
+            tokenUri: ${ssoServiceUrl}/check_token
+            userInfoUri: ${ssoServiceUrl}/userinfo
+            userInfoAuthenticationMethod: header
+            jwkSetUri: ${ssoServiceUrl}/token_key
+            userNameAttribute: name
+
+
+security:
+  oauth2:
+    client:
+      clientId: client1
+      clientSecret: client1
+      accessTokenUri: ${ssoServiceUrl}/oauth/token
+      userAuthorizationUri: ${ssoServiceUrl}/oauth/authorize
+    resource:
+      tokenInfoUri: ${ssoServiceUrl}/check_token
+      jwt:
+        keyUri: ${ssoServiceUrl}/token_key
+      userInfoUri: ${ssoServiceUrl}/userinfo
+
+logging.level:
+  org.springframework.security: INFO
+
+debug: true
